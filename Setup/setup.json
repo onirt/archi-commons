@@ -1,0 +1,36 @@
+{
+	"language": "English",
+	"items": [
+		{
+			"selected": false,
+			"name": "Chiguire Salsero",
+			"type": "image",
+			"asset": "archi.salsa"
+		},
+		{
+			"selected": false,
+			"name": "Chiguire Salsero",
+			"type": "image",
+			"asset": "archi.salsa"
+		},
+		{
+			"selected": true,
+			"name": "Chiguire Salsero",
+			"type": "image",
+			"asset": "archi.salsa"
+		},
+		{
+			"selected": false,
+			"name": "Chiguire Salsero",
+			"type": "image",
+			"asset": "archi.salsa"
+		},
+		{
+			"selected": false,
+			"name": "Chiguire Salsero",
+			"type": "image",
+			"asset": "archi.salsa"
+		}
+		
+	]
+}

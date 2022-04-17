@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: NetworkSetup
   m_EditorClassIdentifier: 
   versionFolder: v.0.0.1
+  catalog: catalog_v.0.0.1
   androidPlatform: Android
   iOSPlatform: iOS
   windowsPlatform: StandaloneWindows
