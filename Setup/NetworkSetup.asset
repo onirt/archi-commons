@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f94dc4befbccab54cb083029140f7734, type: 3}
   m_Name: NetworkSetup
   m_EditorClassIdentifier: 
-  versionFolder: 
+  versionFolder: v.0.0.1
   androidPlatform: Android
   iOSPlatform: iOS
   windowsPlatform: StandaloneWindows
   macOSPlatform: StandaloneOSX
   remoteAssetsServer: 
-  uploadPictureEndpoint: 
-  downloadPictureEndpoint: 
