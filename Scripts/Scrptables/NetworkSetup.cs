@@ -7,6 +7,7 @@ public class NetworkSetup : ScriptableObject
 {
 
     public string versionFolder;
+    [SerializeField] private string catalog;
     [Space(20)]
     [Header("Platforms")]
     [SerializeField] string androidPlatform = "Android";
@@ -18,6 +19,7 @@ public class NetworkSetup : ScriptableObject
     [SerializeField] private string remoteAssetsServer = "";
 
     public string RemoteAssetsServer { get => $"{remoteAssetsServer}/{versionFolder}/{GetPlatform()}"; }
+    public string RemoteCatalogAssetsPath { get => $"{remoteAssetsServer}/{versionFolder}/{GetPlatform()}/{catalog}"; }
 
     public string GetPlatform()
     {
