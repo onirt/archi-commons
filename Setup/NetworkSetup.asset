@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: NetworkSetup
   m_EditorClassIdentifier: 
   versionFolder: v.0.0.1
-  catalog: catalog_v.0.0.1
+  catalog: catalog_v.0.0.1.json
   androidPlatform: Android
   iOSPlatform: iOS
-  windowsPlatform: StandaloneWindows
+  windowsPlatform: StandaloneWindows64
   macOSPlatform: StandaloneOSX
-  remoteAssetsServer: 
+  remoteAssetsServer: https://storage.googleapis.com/unity-assets-1
