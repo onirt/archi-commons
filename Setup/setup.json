@@ -3,33 +3,33 @@
 	"items": [
 		{
 			"selected": false,
-			"name": "Chiguire Salsero",
-			"type": "image",
-			"asset": "archi.salsa"
+			"name": "Chiguire Punk",
+			"type": "markerless",
+			"asset": "archi.punk"
 		},
 		{
 			"selected": false,
-			"name": "Chiguire Salsero",
-			"type": "image",
-			"asset": "archi.salsa"
+			"name": "Chiguire Thor",
+			"type": "markerless",
+			"asset": "archi.thor"
 		},
 		{
 			"selected": true,
-			"name": "Chiguire Salsero",
-			"type": "image",
-			"asset": "archi.salsa"
+			"name": "Chiguire Universitario",
+			"type": "markerless",
+			"asset": "archi.universitario"
 		},
 		{
 			"selected": false,
-			"name": "Chiguire Salsero",
-			"type": "image",
-			"asset": "archi.salsa"
+			"name": "Chiguire Cyborg",
+			"type": "markerless",
+			"asset": "archi.cyborg"
 		},
 		{
 			"selected": false,
-			"name": "Chiguire Salsero",
-			"type": "image",
-			"asset": "archi.salsa"
+			"name": "Chiguire Mago",
+			"type": "markerless",
+			"asset": "archi.mago"
 		}
 		
 	]
