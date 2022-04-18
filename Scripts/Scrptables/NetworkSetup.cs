@@ -18,8 +18,9 @@ public class NetworkSetup : ScriptableObject
     [Space(20)]
     [SerializeField] private string remoteAssetsServer = "";
 
+    public string RemoteSever { get => $"{remoteAssetsServer}/{versionFolder}"; }
     public string RemoteAssetsServer { get => $"{remoteAssetsServer}/{versionFolder}/{GetPlatform()}"; }
-    public string RemoteCatalogAssetsPath { get => $"{remoteAssetsServer}/{versionFolder}/{GetPlatform()}/{catalog}"; }
+    public string RemoteCatalogAssetsPath { get => $"{remoteAssetsServer}/{versionFolder}/{GetPlatform()}/{catalog}?t={Random.Range(0,10000)}"; }
 
     public string GetPlatform()
     {
