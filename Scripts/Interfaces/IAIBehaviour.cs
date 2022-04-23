@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IAIBehaviour
 {
+    void Init();
 }
     
