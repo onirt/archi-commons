@@ -4,32 +4,59 @@
 		{
 			"selected": false,
 			"name": "Chiguire Punk",
-			"type": "markerless",
+			"type": "character",
 			"asset": "archi.punk"
 		},
 		{
 			"selected": false,
 			"name": "Chiguire Thor",
-			"type": "markerless",
+			"type": "character",
 			"asset": "archi.thor"
 		},
 		{
 			"selected": true,
 			"name": "Chiguire Universitario",
-			"type": "markerless",
+			"type": "character",
 			"asset": "archi.universitario"
 		},
 		{
 			"selected": false,
 			"name": "Chiguire Cyborg",
-			"type": "markerless",
+			"type": "character",
 			"asset": "archi.cyborg"
 		},
 		{
 			"selected": false,
 			"name": "Chiguire Mago",
-			"type": "markerless",
+			"type": "character",
 			"asset": "archi.mago"
+		},
+		{
+			"selected": false,
+			"name": "Chiguire Cyborg",
+			"type": "character",
+			"asset": "archi.cyborg"
+		},
+		{
+			"selected": false,
+			"name": "Chiguire Mago",
+			"type": "character",
+			"asset": "archi.mago"
+		}
+	],
+	"scenaries":
+	[
+		{
+			"selected": true,
+			"name": "Space",
+			"type": "scenary",
+			"asset": "space"
+		},
+		{
+			"selected": false,
+			"name": "Cibercity",
+			"type": "scenary",
+			"asset": "cibercity"
 		}
 		
 	]
