@@ -22,15 +22,30 @@
 		{
 			"selected": false,
 			"name": "Chiguire Cyborg",
-			"type": "markerless",
+			"type": "character",
 			"asset": "archi.cyborg"
 		},
 		{
 			"selected": false,
 			"name": "Chiguire Mago",
-			"type": "markerless",
+			"type": "character",
 			"asset": "archi.mago"
 		}
 		
+	],
+	"scenaries": [
+		{
+			"selected": false,
+			"name": "Cibercity",
+			"type": "scenary",
+			"asset": "cibercity"
+		},
+		{
+			"selected": false,
+			"name": "Space",
+			"type": "scenary",
+			"asset": "space"
+		}
 	]
+
 }
