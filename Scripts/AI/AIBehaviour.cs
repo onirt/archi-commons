@@ -5,12 +5,10 @@ using UnityEngine;
 public class AIBehaviour : MonoBehaviour, IAIBehaviour
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private AnimationClip[] clips;
 
-    private void Start()
-    {
-        animator.SetBool("Started", true);
-    }
-    public void Init()
+    public Attributes attributes;
+    public void Start()
     {
         Debug.Log("[AIBehaviour] Init");
         animator.SetBool("Started", true);
@@ -19,5 +17,9 @@ public class AIBehaviour : MonoBehaviour, IAIBehaviour
     public void OnMouseDown()
     {
         animator.SetTrigger("Touch");
+    }
+    public virtual void Move(Vector3 direction)
+    {
+
     }
 }
