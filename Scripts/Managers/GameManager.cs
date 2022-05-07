@@ -2,18 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IAddressableListHandle, IGame
 {
-    public List<string> addressable = new List<string>();
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] GameController controller;
+    public List<string> addressables = new List<string>();
+
+    private float playTime;
+
+    private void OnEnable()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartGame()
     {
-        
+        StartCoroutine(Playing());
+    }
+    public void EndGame()
+    {
+
+    }
+
+    IEnumerator Playing()
+    {
+        playTime = 0;
+        while (playTime < controller.Setup.GameTime)
+        {
+            playTime += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public void AddAddressable(string addressable)
+    {
+        addressables.Add(addressable);
+    }
+
+    public bool ContainsAddressable(string addressable)
+    {
+        return addressables.Contains(addressable);
     }
 }
