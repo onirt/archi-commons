@@ -8,9 +8,9 @@ public class AIBehaviour : MonoBehaviour, IAIBehaviour
     [SerializeField] private AnimationClip[] clips;
 
     public Attributes attributes;
-    public void Init()
+    public void Start()
     {
-        animator.SetBool("Started", true);
+        Init();
     }
 
     public void OnMouseDown()
@@ -20,5 +20,11 @@ public class AIBehaviour : MonoBehaviour, IAIBehaviour
     public virtual void Move(Vector3 direction)
     {
 
+    }
+
+    public void Init()
+    {
+        Debug.Log("[AIBehaviour] Init");
+        animator.SetBool("Started", true);
     }
 }

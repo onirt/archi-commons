@@ -59,5 +59,20 @@
 			"asset": "cibercity"
 		}
 		
+	],
+	"scenaries": [
+		{
+			"selected": false,
+			"name": "Cibercity",
+			"type": "scenary",
+			"asset": "cibercity"
+		},
+		{
+			"selected": false,
+			"name": "Space",
+			"type": "scenary",
+			"asset": "space"
+		}
 	]
+
 }

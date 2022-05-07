@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(fileName = "PlayerInputChannel", menuName = "Channels/Inputs/Player")]
 public class PlayerInputChannel : ScriptableObject
 {
+	[SerializeField] PlayerInput playerInput;
 	public event UnityAction<Vector2> moveEvent;
 	public event UnityAction action;
 
