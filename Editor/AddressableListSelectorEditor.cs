@@ -5,58 +5,61 @@ using UnityEngine;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 
-public class AddressableListSelectorEditor : Editor
+namespace ArChi
 {
-    private List<string> addressablesKeys = new List<string>();
-
-    private IAddressableListHandle addressableListManager;
-
-    private string currentHandleKey;
-
-    protected string filter;
-
-    private void OnEnable()
+    public class AddressableListSelectorEditor : Editor
     {
-        filter = "nothing";
-    }
+        private List<string> addressablesKeys = new List<string>();
 
-    public override void OnInspectorGUI()
-    {
-        filter = EditorGUILayout.TextField(filter);
+        private IAddressableListHandle addressableListManager;
 
-        addressableListManager = (IAddressableListHandle)target;
-        addressablesKeys.Clear();
-        for (int i = 0; i < AddressableAssetSettingsDefaultObject.Settings.groups.Count; i++)
+        private string currentHandleKey;
+
+        protected string filter;
+
+        private void OnEnable()
         {
-            foreach (var entry in AddressableAssetSettingsDefaultObject.Settings.groups[i].entries)
+            filter = "nothing";
+        }
+
+        public override void OnInspectorGUI()
+        {
+            filter = EditorGUILayout.TextField(filter);
+
+            addressableListManager = (IAddressableListHandle)target;
+            addressablesKeys.Clear();
+            for (int i = 0; i < AddressableAssetSettingsDefaultObject.Settings.groups.Count; i++)
             {
-                if (entry.address.Contains("archi") && (string.IsNullOrEmpty(filter) || entry.address.Contains(filter)) && !addressableListManager.ContainsAddressable(entry.address))
+                foreach (var entry in AddressableAssetSettingsDefaultObject.Settings.groups[i].entries)
                 {
-                    addressablesKeys.Add(entry.address);
+                    if (entry.address.Contains("archi") && (string.IsNullOrEmpty(filter) || entry.address.Contains(filter)) && !addressableListManager.ContainsAddressable(entry.address))
+                    {
+                        addressablesKeys.Add(entry.address);
+                    }
                 }
             }
+            EditorsUtils.AddVerticalLayer("box", BuildAddressablesList);
+            base.OnInspectorGUI();
         }
-        EditorsUtils.AddVerticalLayer("box", BuildAddressablesList);
-        base.OnInspectorGUI();
-    }
-    private void BuildAddressablesList()
-    {
-        for (int i = 0; i < addressablesKeys.Count; i++)
+        private void BuildAddressablesList()
         {
-            currentHandleKey = addressablesKeys[i];
-            EditorsUtils.AddHorizontalLayer("box", AddAddressableEntry);
+            for (int i = 0; i < addressablesKeys.Count; i++)
+            {
+                currentHandleKey = addressablesKeys[i];
+                EditorsUtils.AddHorizontalLayer("box", AddAddressableEntry);
+            }
         }
-    }
-    private void AddAddressableEntry()
-    {
-        EditorGUILayout.LabelField(currentHandleKey);
-
-        GUI.color = Color.green;
-        if (GUILayout.Button("Add"))
+        private void AddAddressableEntry()
         {
-            addressableListManager.AddAddressable(currentHandleKey);
-        }
+            EditorGUILayout.LabelField(currentHandleKey);
 
-        GUI.color = Color.white;
+            GUI.color = Color.green;
+            if (GUILayout.Button("Add"))
+            {
+                addressableListManager.AddAddressable(currentHandleKey);
+            }
+
+            GUI.color = Color.white;
+        }
     }
 }

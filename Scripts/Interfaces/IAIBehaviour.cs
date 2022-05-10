@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAIBehaviour
+namespace ArChi
 {
-    void Init();
+    public interface IAIBehaviour
+    {
+        void Init();
+    }
 }
     

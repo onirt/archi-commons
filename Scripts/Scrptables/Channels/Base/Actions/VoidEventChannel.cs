@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "VoidEventChannel", menuName = "Channels/Events/Void")]
-public class VoidEventChannel : ScriptableObject
+namespace ArChi
 {
-    public UnityAction eventChannel;
-
-    public void TriggerEvent()
+    [CreateAssetMenu(fileName = "VoidEventChannel", menuName = "Channels/Events/Void")]
+    public class VoidEventChannel : ScriptableObject
     {
-        eventChannel?.Invoke();
+        public UnityAction eventChannel;
+
+        public void TriggerEvent()
+        {
+            eventChannel?.Invoke();
+        }
     }
 }

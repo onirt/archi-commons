@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DelegateChannel<T> : ScriptableObject
+namespace ArChi
 {
-    public delegate T GetListener();
-    public GetListener listener;
-
-    public T Get()
+    public class DelegateChannel<T> : ScriptableObject
     {
-        if (listener == null)
+        public delegate T GetListener();
+        public GetListener listener;
+
+        public T Get()
         {
-            Debug.Log($"[Error] no listener detected on {name}");
+            if (listener == null)
+            {
+                Debug.Log($"[Error] no listener detected on {name}");
+            }
+            return listener();
         }
-        return listener();
     }
 }

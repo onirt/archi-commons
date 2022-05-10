@@ -4,7 +4,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CustomEditor(typeof(GameManager))]
-public class GameManagerEditor : AddressableListSelectorEditor
-{   
+namespace ArChi
+{
+    [CustomEditor(typeof(GameManager))]
+    public class GameManagerEditor : AddressableListSelectorEditor
+    {
+    }
 }

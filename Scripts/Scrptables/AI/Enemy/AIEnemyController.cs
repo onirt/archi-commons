@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIEnemyController : AIController
+namespace ArChi
 {
-    public string target;
+    public class AIEnemyController : AIController
+    {
+        public string target;
+    }
 }

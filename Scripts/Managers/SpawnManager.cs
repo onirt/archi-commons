@@ -1,44 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+namespace ArChi
 {
-    [SerializeField] SpawnData groundHumanoid;
-    [SerializeField] SpawnData groundRobot;
-    [SerializeField] SpawnData flyRobot;
-    [SerializeField] SpawnData groundVehicle;
-    [SerializeField] SpawnData flyVehicle;
+    public class SpawnManager : MonoBehaviour
+    {
+        [Header("Channels")]
+        [SerializeField] private SpawnPointChannel spawnPointChannel;
+        [SerializeField] private SpawnPoint[] spawnPoints;
 
-    [SerializeField] Transform[] groundHumanoidSpawnPoints;
-    [SerializeField] Transform[] groundRobotsSpawnPoints;
-    [SerializeField] Transform[] flyRobotsSpawnPoints;
-    [SerializeField] Transform[] groundVehiclesSpawnPoints;
-    [SerializeField] Transform[] flyVehiclesSpawnPoints;
+        private void OnEnable()
+        {
+            spawnPointChannel.listener += GetSpawnPoint;
+        }
+        private void OnDisable()
+        {
+            spawnPointChannel.listener -= GetSpawnPoint;
+        }
 
-    public void SpawnGroundVehicle(int level)
-    {
-        Transform point = groundVehiclesSpawnPoints[Random.Range(0, groundVehiclesSpawnPoints.Length)];
-        StartCoroutine(groundVehicle.Instantiate(point, level, null));
-    }
-    public void SpawnFlyVehicle(int level)
-    {
-        Transform point = flyVehiclesSpawnPoints[Random.Range(0, flyVehiclesSpawnPoints.Length)];
-        StartCoroutine(flyVehicle.Instantiate(point, level, null));
-    }
-    public void SpawnFlyRobot(int level)
-    {
-        Transform point = flyRobotsSpawnPoints[Random.Range(0, flyRobotsSpawnPoints.Length)];
-        StartCoroutine(flyRobot.Instantiate(point, level, null));
-    }
-    public void SpawnGroundRobot(int level)
-    {
-        Transform point = groundRobotsSpawnPoints[Random.Range(0, groundRobotsSpawnPoints.Length)];
-        StartCoroutine(groundRobot.Instantiate(point, level, null));
-    }
-    public void SpawnGroundHumanoid(int level)
-    {
-        Transform point = groundHumanoidSpawnPoints[Random.Range(0, groundHumanoidSpawnPoints.Length)];
-        StartCoroutine(groundHumanoid.Instantiate(point, level, null));
+        public Transform GetSpawnPoint(SpawnType type)
+        {
+            Debug.Log($"[Game] spawn point type: {type}");
+            var points = spawnPoints.Where(x => x.type == type);
+            return points.ElementAt(Random.Range(0, points.Count())).point;
+        }
     }
 }

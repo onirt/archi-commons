@@ -2,14 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class GameController : ScriptableObject
+namespace ArChi
 {
-    [SerializeField] private GameSetup setup;
+    public abstract class GameController : ScriptableObject, IEventRegister, IGame
+    {
+        [Header("Channels")]
+        [SerializeField] protected VoidEventChannel startGameChannel;
+        [SerializeField] protected VoidEventChannel endGameChannel;
+        [SerializeField] private FloatEventChannel scoreChannel;
+        [Space(20)]
+        [SerializeField] protected GameSetup setup;
 
-    public GameSetup Setup { get => setup; }
+        protected float score;
 
-    public abstract void GameStart();
-    public abstract void GameEnded();
+        public void AddScore(float value)
+        {
+            score += value;
+        }
+        public virtual void RegisterEvent()
+        {
+            startGameChannel.eventChannel += StartGame;
+            scoreChannel.eventChannel += AddScore;
+        }
+        public virtual void UnregisterEvent()
+        {
+            startGameChannel.eventChannel -= StartGame;
+            scoreChannel.eventChannel -= AddScore;
+        }
 
+        public GameSetup Setup { get => setup; }
 
+        public abstract void StartGame();
+        public abstract void EndGame();
+    }
 }

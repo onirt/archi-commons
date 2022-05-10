@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAddressableListHandle
+namespace ArChi
 {
-    bool ContainsAddressable(string addressable);
-    void AddAddressable(string addressable);
+    public interface IAddressableListHandle
+    {
+        bool ContainsAddressable(string addressable);
+        void AddAddressable(string addressable);
+    }
 }

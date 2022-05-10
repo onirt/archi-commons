@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EventChannel<T> : ScriptableObject
+namespace ArChi
 {
-    public UnityAction<T> eventChannel;
-
-    public void TriggerEvent(T args)
+    public class EventChannel<T> : ScriptableObject
     {
-        eventChannel?.Invoke(args);
+        public UnityAction<T> eventChannel;
+
+        public void TriggerEvent(T args)
+        {
+            eventChannel?.Invoke(args);
+        }
     }
 }

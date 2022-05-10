@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(SpawnData))]
-public class SpawnDataEditor : AddressableListSelectorEditor
+namespace ArChi
 {
-    private void OnEnable()
+    [CustomEditor(typeof(SpawnData))]
+    public class SpawnDataEditor : AddressableListSelectorEditor
     {
-        SpawnData data = (SpawnData)target;
-        filter = data.type;
+        private void OnEnable()
+        {
+            SpawnData data = (SpawnData)target;
+            filter = data.category;
+        }
     }
 }

@@ -1,45 +1,85 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour, IAddressableListHandle, IGame
+namespace ArChi
 {
-    [SerializeField] GameController controller;
-    public List<string> addressables = new List<string>();
-
-    private float playTime;
-
-    private void OnEnable()
+    public class GameManager : MonoBehaviour, IAddressableListHandle, IGame
     {
-        
-    }
+        [Header("Channels")]
+        [SerializeField] private VoidEventChannel startGameChannel;
+        [SerializeField] private VoidEventChannel endGameChannel;
+        [Space(20)]
+        [SerializeField] GameController controller;
+        public List<string> addressables = new List<string>();
 
-    public void StartGame()
-    {
-        StartCoroutine(Playing());
-    }
-    public void EndGame()
-    {
+        private GameStatus status;
+        private float playTime;
 
-    }
-
-    IEnumerator Playing()
-    {
-        playTime = 0;
-        while (playTime < controller.Setup.GameTime)
+        private void Start()
         {
-            playTime += Time.deltaTime;
-            yield return null;
+            startGameChannel.TriggerEvent();
+        }
+
+        private void OnEnable()
+        {
+            controller.RegisterEvent();
+            startGameChannel.eventChannel += StartGame;
+            endGameChannel.eventChannel += EndGame;
+        }
+        private void OnDisable()
+        {
+            controller.UnregisterEvent();
+            startGameChannel.eventChannel -= StartGame;
+            endGameChannel.eventChannel -= EndGame;
+        }
+
+        public void StartGame()
+        {
+            Debug.Log("[Game] start");
+            status = GameStatus.Started;
+            StartCoroutine(Playing());
+        }
+        public void EndGame()
+        {
+            Debug.Log("[Game] end");
+            status = GameStatus.Ended;
+        }
+
+        IEnumerator Playing()
+        {
+            playTime = 0;
+            while (status == GameStatus.Started && playTime < controller.Setup.GameTime)
+            {
+                playTime += Time.deltaTime;
+                yield return null;
+            }
+            if (status == GameStatus.Started)
+            {
+                endGameChannel.TriggerEvent();
+            }
+        }
+
+        public void AddAddressable(string addressable)
+        {
+            addressables.Add(addressable);
+        }
+
+        public bool ContainsAddressable(string addressable)
+        {
+            return addressables.Contains(addressable);
         }
     }
-
-    public void AddAddressable(string addressable)
+    public enum GameStatus
     {
-        addressables.Add(addressable);
+        Started,
+        Ended
     }
-
-    public bool ContainsAddressable(string addressable)
+    [Serializable]
+    public struct SpawnPoint
     {
-        return addressables.Contains(addressable);
+        public Transform point;
+        public SpawnType type;
     }
 }

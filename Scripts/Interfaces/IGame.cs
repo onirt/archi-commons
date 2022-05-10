@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IGame
+namespace ArChi
 {
-    void StartGame();
-    void EndGame();
+    public interface IGame
+    {
+        void StartGame();
+        void EndGame();
+    }
 }
