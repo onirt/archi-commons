@@ -6,6 +6,8 @@ namespace ArChi
 {
     public class DelegateChannel<T> : ScriptableObject
     {
+
+        [SerializeField] private T defaultValue;
         public delegate T GetListener();
         public GetListener listener;
 
@@ -14,6 +16,7 @@ namespace ArChi
             if (listener == null)
             {
                 Debug.Log($"[Error] no listener detected on {name}");
+                return defaultValue;
             }
             return listener();
         }

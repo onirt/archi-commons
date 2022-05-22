@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 namespace ArChi
 {
@@ -10,15 +11,22 @@ namespace ArChi
         [Header("Channels")]
         [SerializeField] private VoidEventChannel startGameChannel;
         [SerializeField] private VoidEventChannel endGameChannel;
+        [SerializeField] private Vecto3DelegateChannel patrolPointChannel;
         [Space(20)]
-        [SerializeField] GameController controller;
+        [Header("Controllers")]
+        [SerializeField] private GameController controller;
+        [Space(20)]
+        [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
         public List<string> addressables = new List<string>();
 
         private GameStatus status;
         private float playTime;
 
+        public bool debug;
+
         private void Start()
         {
+            if (debug)
             startGameChannel.TriggerEvent();
         }
 
@@ -27,12 +35,14 @@ namespace ArChi
             controller.RegisterEvent();
             startGameChannel.eventChannel += StartGame;
             endGameChannel.eventChannel += EndGame;
+            patrolPointChannel.listener += GetPatrolPoint;
         }
         private void OnDisable()
         {
             controller.UnregisterEvent();
             startGameChannel.eventChannel -= StartGame;
             endGameChannel.eventChannel -= EndGame;
+            patrolPointChannel.listener -= GetPatrolPoint;
         }
 
         public void StartGame()
@@ -69,6 +79,17 @@ namespace ArChi
         public bool ContainsAddressable(string addressable)
         {
             return addressables.Contains(addressable);
+        }
+        
+        private Vector3 GetPatrolPoint()
+        {
+            if (patrolPoints.Count == 0)
+            {
+                return Vector3.zero;
+            }
+            int selectedPoint = UnityEngine.Random.Range(0, patrolPoints.Count);
+            Debug.Log($"[Patrol] selceted point: {selectedPoint}, position: {patrolPoints[selectedPoint].position}");
+            return patrolPoints[selectedPoint].position;
         }
     }
     public enum GameStatus

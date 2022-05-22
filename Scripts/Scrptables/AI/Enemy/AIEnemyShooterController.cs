@@ -2,109 +2,98 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ArChi
+namespace ArChi.Controllers
 {
     [CreateAssetMenu(fileName = "AIEnemyShooterController", menuName = "Controllers/AI/Enemy/Shooter")]
-    public class AIEnemyShooterController : AIController
+    public class AIEnemyShooterController : AIShooterController
     {
-        public string target;
-        public bool stay;
-
+        [Header("Channels")]
+        [SerializeField] private Vecto3DelegateChannel patrolPointsChannel;
         public void Search(AIEnemyShooterBehaviour enemy)
         {
-            if (stay)
+            if (enemy.haveAim)
             {
-                return;
-            }
-            if (enemy.State != CharacterState.Searching)
-            {
-                enemy.State = CharacterState.Searching;
-                enemy.Animator.SetBool("Attack", false);
-            }
-            GameObject finded = GameObject.FindGameObjectWithTag(target);
-            if (finded)
-            {
-                enemy.NavMeshAgent.SetDestination(finded.transform.position);
-            }
-            else
-            {
-                Debug.Log($"[AI] i dont find anything, i dont know what to do.. i gonna cry :(");
-            }
-        }
-        public void Stop(AIEnemyShooterBehaviour enemy)
-        {
-
-            if (!enemy.NavMeshAgent.isStopped)
-            {
-                enemy.NavMeshAgent.isStopped = true;
-                enemy.NavMeshAgent.speed = 0;
-                Debug.Log($"[AI] i stop move ");
-            }
-        }
-        public void Move(AIEnemyShooterBehaviour enemy)
-        {
-            if (stay)
-            {
-                return;
-            }
-            if (enemy.NavMeshAgent.isStopped)
-            {
-                enemy.NavMeshAgent.isStopped = false;
-                enemy.NavMeshAgent.speed = 3.5f;
-            }
-        }
-        public void Attack(ITakeDamage target, AIEnemyShooterBehaviour enemy)
-        {
-            if (stay)
-            {
-                return;
-            }
-            Debug.Log($"[AI] attacking ");
-            if (enemy.State != CharacterState.Attacking)
-            {
-                enemy.State = CharacterState.Attacking;
-                enemy.Animator.SetBool("Attack", true);
-            }
-            IMakeDamage damage = enemy.Model.GetWeapon(Random.Range(0, enemy.Model.WeaponsCount));
-            if (damage != null)
-            {
-                Debug.Log($"[AI][Controller]Enemy: {enemy.name}");
-                if (enemy.Attributes == null)
+                Vector3 otherPosition = enemy.TargetAim.target.position;
+                if (Vector3.Distance(otherPosition, enemy.transform.position) > enemy.GetRange())
                 {
-                    Debug.Log($"[AI][Controller]Enemy Not Have Attributes: {enemy.name}");
+                    enemy.NavMeshAgent.SetDestination(new Vector3(otherPosition.x, 0, otherPosition.z));
+                    enemy.state = CharacterState.Seeking;
+                    Move(enemy);
                 }
-                target.Take(damage.Get(enemy.Attributes));
-            }
-            else
-            {
-                Debug.Log($"[{enemy.name}] What?!! I dont have any weapon!! :(");
-            }
-        }
-
-        public void Take(Attributes attributes, AIEnemyShooterBehaviour enemy)
-        {
-            float damage = attributes.attack;
-            damage *= 1.0f / attributes.defense;
-            float hitProbability = Random.Range(0, 100) / attributes.dextery;
-            if (hitProbability < 30f)
-            {
-                if (hitProbability < 10)
+                else
                 {
-                    damage *= 2;
-                    Debug.Log($"[{enemy.name}] Sweet! is Critical");
-                }
-                attributes.health -= damage;
-                if (attributes.health <= 0)
-                {
-                    enemy.DiedChannel.TriggerEvent(enemy);
-                    enemy.Animator.SetTrigger("Die");
-                    Destroy(enemy.gameObject, 5);
+                    enemy.state = CharacterState.Attacking;
+                    Stop(enemy);
                 }
             }
             else
             {
-                Debug.Log($"[{enemy.name}] What?! I fail!");
+                enemy.state = CharacterState.Idle;
+                Stop(enemy);
             }
+        }
+        public void Think(AIEnemyShooterBehaviour enemy)
+        {
+            if (enemy.exhaustionColdown > 0 && enemy.exhaustionColdown < enemy._Model.Stamina)
+            {
+                enemy.exhaustionColdown -= Time.deltaTime;
+                if (enemy.exhaustionColdown < 0)
+                {
+                    enemy.exhaustionColdown = 0;
+                    enemy.PerceptionRadius = enemy.GetRange();
+                }
+            }
+            if (Random.Range(0, 3) == 0)
+            {
+                enemy.state = CharacterState.Patrol;
+            }
+            else
+            {
+                enemy.state = CharacterState.Idle;
+            }
+        }
+        public void Seek(AIEnemyShooterBehaviour enemy)
+        {
+            if (enemy.haveAim)
+            {
+                float distance = Vector3.Distance(enemy.transform.position, enemy.TargetAim.target.position);
+                if (distance > enemy.GetRange())
+                {
+                    enemy.NavMeshAgent.SetDestination(enemy.TargetAim.target.position);
+                    Move(enemy);
+                }
+                else
+                {
+                    enemy.state = CharacterState.Attacking;
+                }
+            }
+            else
+            {
+                if (enemy.exhaustionColdown < enemy._Model.Stamina)
+                {
+                    enemy.PerceptionRadius = GetPerception(enemy);
+                    enemy.exhaustionColdown += Time.deltaTime;
+                }
+                else
+                {
+                    enemy.PerceptionRadius = enemy.GetRange();
+                    enemy.state = CharacterState.Idle;
+                    Stop(enemy);
+                }
+            }
+        }
+        public void Patrol(AIEnemyShooterBehaviour enemy)
+        {
+            if (!enemy.isMoving)
+            {
+                enemy.NavMeshAgent.SetDestination(patrolPointsChannel.Get());
+                enemy.state = CharacterState.Idle;
+            }
+            Move(enemy);
+        }
+        private float GetPerception(AIEnemyShooterBehaviour enemy)
+        {
+            return enemy.GetRange() + enemy.GetModel().Attributes.dextery * 0.5f;
         }
     }
 }

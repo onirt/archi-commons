@@ -6,16 +6,20 @@ namespace ArChi
 {
     public class CharacterModel : PawnModel
     {
-        [SerializeField] protected CharacterRigPose[] poses;
-        [SerializeField] protected SpawnData spawner;
         [SerializeField] protected WeaponModel[] weapons;
+        [SerializeField] protected float stamina;
 
         public int WeaponsCount { get => weapons.Length; }
-        public SpawnData Spawner { get => spawner; }
 
-        public IMakeDamage GetWeapon(int i)
+        public float Stamina { get => stamina; }
+
+        public IMakeDamage GetWeaponDamage(int i)
         {
             return weapons[i];
+        }
+        public float GetWeaponRange(int i)
+        {
+            return weapons[i].Attributes.range;
         }
 
         public void InstantiateWeapon(int i, Transform parent)

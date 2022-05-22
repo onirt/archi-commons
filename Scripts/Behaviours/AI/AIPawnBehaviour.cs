@@ -4,21 +4,22 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public class AIPawnBehaviour : AIBehaviour, IModel
+    public class AIPawnBehaviour : AIBehaviour, IModel<PawnModel>
     {
+        [SerializeField] protected PawnModel model;
         protected Attributes attributes;
 
         public Attributes Attributes { get => attributes; }
 
-        public virtual Attributes GetModelAttributes()
+        public virtual PawnModel GetModel()
         {
-            throw new System.NotImplementedException();
+            return model;
         }
 
         public override void Init()
         {
             base.Init();
-            attributes = new Attributes(GetModelAttributes());
+            attributes = new Attributes(GetModel()?.Attributes);
         }
     }
 }

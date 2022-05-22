@@ -9,25 +9,32 @@ namespace ArChi
     public class GameControllerSurvivor : GameController
     {
         [Header("Channels")]
+        [SerializeField] private Vector3EventChannel destinationChannel;
+        [SerializeField] private FloatDelegateChannel worldScaleChannel;
         [SerializeField] private FloatEventChannel playerHealthChannel;
-        [SerializeField] AIBehaviourEventChannel enemyDiedChannel;
-        [SerializeField] SpawnPointChannel spawnPointChannel;
-
+        [SerializeField] private AIBehaviourEventChannel enemyDiedChannel;
+        [SerializeField] private SpawnPointChannel spawnPointChannel;
+        [Space(20)]
+        [SerializeField] private SpawnData[] playersSpawnsData;
+        [SerializeField] private SpawnData[] enemysSpawnsData;
         [Space(20)]
         [SerializeField] private Attributes player;
-        [SerializeField] private SpawnData[] spawnsData;
-
+        [Space(20)]
+        [SerializeField] private float worldScale;
         private int diedsCount;
         private int round;
 
         public override void RegisterEvent()
         {
             base.RegisterEvent();
+            Debug.Log($"[Game] controller registering channels [{name}]");
+            worldScaleChannel.listener += GetWorldScale;
             enemyDiedChannel.eventChannel += EnemyDied;
         }
         public override void UnregisterEvent()
         {
             base.UnregisterEvent();
+            worldScaleChannel.listener -= GetWorldScale;
             enemyDiedChannel.eventChannel -= EnemyDied;
         }
         private void EnemyDied(AIBehaviour enemy)
@@ -73,14 +80,31 @@ namespace ArChi
             SpawnData spawnData;
             for (int i = 0; i < size; i++)
             {
-                spawnData = spawnsData[Random.Range(0, spawnsData.Length)];
+                spawnData = enemysSpawnsData[Random.Range(0, enemysSpawnsData.Length)];
                 spawnData.Instantiate(spawnPointChannel.Get(spawnData.type), round, Spawned);
+            }
+            for (int i = 0; i < survivorSetup.PlayerNumbers; i++)
+            {
+                spawnData = playersSpawnsData[Random.Range(0, playersSpawnsData.Length)];
+                //This shuld be filled with the player status
+                spawnData.Instantiate(spawnPointChannel.Get(spawnData.type), player.level, Spawned);
             }
         }
 
-        void Spawned(GameObject spawned)
+        private void Spawned(GameObject spawned)
         {
             Debug.Log($"[Game] spawned succes: [{spawned.name}]");
+
+            IDestination[] idestination = spawned.GetComponentsInChildren<IDestination>();
+            for (int i=0; i < idestination.Length; i++)
+            {
+                destinationChannel.eventChannel += idestination[i].SetDestination;
+            }
+        }
+        private float GetWorldScale()
+        {
+            Debug.Log($"[Game] Wrold Scale: {worldScale}");
+            return worldScale;
         }
     }
 }

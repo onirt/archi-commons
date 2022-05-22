@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace ArChi
         [SerializeField] protected Animator animator;
         [SerializeField] private AnimationClip[] clips;
 
-        protected CharacterState state;
+        public CharacterState state;
 
         public Animator Animator { get => animator; }
         public CharacterState State { get => state; set => state = value; }
@@ -27,7 +28,11 @@ namespace ArChi
         public virtual void Init()
         {
             Debug.Log("[AIBehaviour] Init");
-            animator.SetBool("Started", true);
+            if (animator)
+            {
+                animator.SetBool("Started", true);
+            }
+            state = CharacterState.Idle;
         }
     }
     public enum CharacterState
@@ -35,7 +40,35 @@ namespace ArChi
         Idle,
         Attacking,
         Searching,
+        Seeking,
+        Patrol,
         Defending
     }
 
+    [Serializable]
+    public struct SimpleVector
+    {
+        public float x;
+        public float y;
+        public float z;
+    }
+    [Serializable]
+    public struct SimpleTransform
+    {
+        public Vector3 position;
+        public Vector3 rotation;
+    }
+    [Serializable]
+    public class Pose
+    {
+        public PoseReference reference;
+        public SimpleTransform transform;
+    }
+    public enum PoseReference
+    {
+        Head,
+        Chest,
+        Lefthand,
+        RightHand
+    }
 }

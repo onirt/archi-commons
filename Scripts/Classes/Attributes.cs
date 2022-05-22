@@ -16,16 +16,20 @@ namespace ArChi
         public float defense;
         public float dextery;
         public float speed;
+        public float range;
         public float cooldown;
 
         public Attributes(Attributes attributes)
         {
+            name = attributes.name;
+            category = attributes.category;
             level = attributes.level;
             health = attributes.health;
             attack = attributes.attack;
             defense = attributes.defense;
             dextery = attributes.dextery;
             speed = attributes.speed;
+            range = attributes.range;
             cooldown = attributes.cooldown;
         }
     }

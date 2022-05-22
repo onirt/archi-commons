@@ -23,7 +23,7 @@ namespace ArChi
         }
         public void Instantiate(Transform parent)
         {
-            spawner.Instantiate(addressable, parent, true, 1, Spawned);
+            spawner.Instantiate(addressable, parent, SpawnMode.Parent, 1, Spawned);
         }
         void Spawned(GameObject spawned)
         {

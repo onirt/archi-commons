@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ArChi
+namespace ArChi.Controllers
 {
-    public interface IModel<T>
+    public interface IController<T>
     {
-        T GetModel();
+        T GetController();
     }
 }

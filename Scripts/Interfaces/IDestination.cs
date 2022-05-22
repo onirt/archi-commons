@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public interface IModel<T>
+    public interface IDestination
     {
-        T GetModel();
+        void SetDestination(Vector3 destination);
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public interface IModel<T>
+    public interface IMove<T>
     {
-        T GetModel();
+        void Move(T kinematic);
     }
 }
