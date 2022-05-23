@@ -57,10 +57,6 @@ namespace ArChi
 
         public int GetPoints()
         {
-            if (moving != null)
-            {
-                StopCoroutine(moving);
-            }
             return ((EnemyModel)model).Points;
         }
         public override PawnModel GetModel()
