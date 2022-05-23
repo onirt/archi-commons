@@ -6,8 +6,8 @@ using UnityEngine.Events;
 
 namespace ArChi
 {
-    [CustomEditor(typeof(GameManager))]
-    public class GameManagerEditor : AddressableListSelectorEditor
+    [CustomEditor(typeof(GameControllerSurvivor))]
+    public class GameControllerEditor : AddressableListSelectorEditor
     {
     }
 }

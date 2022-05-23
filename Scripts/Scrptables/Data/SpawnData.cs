@@ -43,7 +43,7 @@ namespace ArChi
         {
             int selected = Random.Range(0, addressables.Count);
             Debug.Log($"[Game] instantiating [{addressables[selected]}]");
-            Instantiate(addressables[selected], point, SpawnMode.Parent, level, response);
+            Instantiate(addressables[selected], point, SpawnMode.None, level, response);
         }
 
         public async void Instantiate(string addressable, Transform transform, SpawnMode mode, int level, UnityAction<GameObject> response)
@@ -77,19 +77,30 @@ namespace ArChi
         }
         private void InstantiatePrefab(string addressable, Transform transform, SpawnMode mode, UnityAction<GameObject> response)
         {
+            
             GameObject result;
-            switch(mode)
+            Transform resulTransform;
+            switch (mode)
             {
                 case SpawnMode.Parent:
+                    Debug.Log($"[Game][SpawnMode.Parent] Instantiating {addressable} at: {transform.position} by {transform.name}");
+
                     result = Instantiate(loaded[addressable].Result, transform);
+                    resulTransform = result.transform;
+                    resulTransform.localPosition = Vector3.zero;
+                    resulTransform.localRotation = transform.localRotation;
                     break;
                 case SpawnMode.Local:
+                    Debug.Log($"[Game][SpawnMode.Local] Instantiating {addressable} at: {transform.position} by {transform.name}");
+
                     result = Instantiate(loaded[addressable].Result, Vector3.zero, Quaternion.identity);
-                    Transform resulTransform = result.transform;
+                    resulTransform = result.transform;
                     resulTransform.localPosition = transform.localPosition;
                     resulTransform.localRotation = transform.localRotation;
                     break;
                 default:
+                    Debug.Log($"[Game][SpawnMode.None] Instantiating {addressable} at: {transform.position} by {transform.name}");
+
                     result = Instantiate(loaded[addressable].Result, transform.position, transform.rotation);
                     break;
             }
@@ -105,7 +116,8 @@ namespace ArChi
         FlyVehicle,
         GroundRobot,
         FlyRobot,
-        Weapon
+        Weapon,
+        UI
     }
     public enum SpawnMode
     {

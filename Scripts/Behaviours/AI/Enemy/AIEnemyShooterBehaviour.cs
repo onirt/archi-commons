@@ -12,25 +12,11 @@ namespace ArChi
 
         public float exhaustionColdown;
 
-        private Coroutine moving;
-
         public float PerceptionRadius { set => detector.radius = value; get => detector.radius; }
         public override void Init()
         {
             base.Init();
             _controller = (AIEnemyShooterController)controller;
-            if (moving == null)
-            {
-                moving = StartCoroutine(Move());
-            }
-        }
-        IEnumerator Move()
-        {
-            while(true){
-
-                transform.position = Vector3.zero;
-                yield return null;
-            }
         }
 
         private void Update()

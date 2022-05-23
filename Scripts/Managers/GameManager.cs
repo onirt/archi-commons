@@ -6,7 +6,7 @@ using UnityEngine.XR.ARFoundation;
 
 namespace ArChi
 {
-    public class GameManager : MonoBehaviour, IAddressableListHandle, IGame
+    public class GameManager : MonoBehaviour, IGame
     {
         [Header("Channels")]
         [SerializeField] private VoidEventChannel startGameChannel;
@@ -17,7 +17,6 @@ namespace ArChi
         [SerializeField] private GameController controller;
         [Space(20)]
         [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
-        public List<string> addressables = new List<string>();
 
         private GameStatus status;
         private float playTime;
@@ -69,16 +68,6 @@ namespace ArChi
             {
                 endGameChannel.TriggerEvent();
             }
-        }
-
-        public void AddAddressable(string addressable)
-        {
-            addressables.Add(addressable);
-        }
-
-        public bool ContainsAddressable(string addressable)
-        {
-            return addressables.Contains(addressable);
         }
         
         private Vector3 GetPatrolPoint()

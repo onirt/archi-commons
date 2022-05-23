@@ -19,6 +19,7 @@ namespace ArChi
         public AIShooterController controller;
         [Space(20)]
         [SerializeField] protected SphereCollider detector;
+        [SerializeField] protected Transform uiSpot;
         [SerializeField] protected Transform weaponSpot;
 
 
@@ -48,6 +49,7 @@ namespace ArChi
             base.Init();
             _model = (CharacterModel)GetModel();
             weaponSelected = UnityEngine.Random.Range(0, _model.WeaponsCount);
+            _model.InstantiateUI(1, uiSpot, SetUI);
             _model.InstantiateWeapon(weaponSelected, weaponSpot);
             detector.radius = _model.GetWeaponRange(weaponSelected);
             GetController().SetPose(0, this);
@@ -92,6 +94,10 @@ namespace ArChi
                 }
                 state = CharacterState.Seeking;
             }
+        }
+        private void SetUI(GameObject gameObject)
+        {
+
         }
 
         private void SeekExhaustion()

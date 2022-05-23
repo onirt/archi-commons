@@ -74,10 +74,12 @@ namespace ArChi
         public override void StartGame()
         {
             Debug.Log($"[Game] controller start... round [{round}]");
+
+            SpawnData spawnData;
+            
             GameSetupSurvivor survivorSetup = (GameSetupSurvivor)setup;
             int size = survivorSetup.goals[round] / 2;
 
-            SpawnData spawnData;
             for (int i = 0; i < size; i++)
             {
                 spawnData = enemysSpawnsData[Random.Range(0, enemysSpawnsData.Length)];
@@ -93,6 +95,8 @@ namespace ArChi
 
         private void Spawned(GameObject spawned)
         {
+            Debug.Log($"[Game][SpawnMode.None] Result {spawned.name} position: {spawned.transform.position}");
+
             Debug.Log($"[Game] spawned succes: [{spawned.name}]");
 
             IDestination[] idestination = spawned.GetComponentsInChildren<IDestination>();
