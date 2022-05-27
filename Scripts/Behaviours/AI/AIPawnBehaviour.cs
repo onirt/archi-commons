@@ -19,7 +19,7 @@ namespace ArChi
         public override void Init()
         {
             base.Init();
-            attributes = new Attributes(GetModel()?.Attributes);
+            attributes = new Attributes(GetModel().Attributes);
         }
     }
 }

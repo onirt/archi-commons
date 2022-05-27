@@ -38,8 +38,17 @@ namespace ArChi
         {
             return addressables.Contains(addressable);
         }
-
-        public void Instantiate(Transform point, int level, UnityAction<GameObject> response)
+        public void Instantiate(int selected, Transform point, int level, UnityAction<GameObject> response)
+        {
+            Debug.Log($"[Game] instantiating [{addressables[selected]}]");
+            Instantiate(addressables[selected], point, SpawnMode.None, level, response);
+        }
+        public void Instantiate(int selected, Transform point, SpawnMode mode, int level, UnityAction<GameObject> response)
+        {
+            Debug.Log($"[Game] instantiating [{addressables[selected]}]");
+            Instantiate(addressables[selected], point, mode, level, response);
+        }
+        public void InstantiateRandom(Transform point, int level, UnityAction<GameObject> response)
         {
             int selected = Random.Range(0, addressables.Count);
             Debug.Log($"[Game] instantiating [{addressables[selected]}]");
@@ -86,9 +95,6 @@ namespace ArChi
                     Debug.Log($"[Game][SpawnMode.Parent] Instantiating {addressable} at: {transform.position} by {transform.name}");
 
                     result = Instantiate(loaded[addressable].Result, transform);
-                    resulTransform = result.transform;
-                    resulTransform.localPosition = Vector3.zero;
-                    resulTransform.localRotation = transform.localRotation;
                     break;
                 case SpawnMode.Local:
                     Debug.Log($"[Game][SpawnMode.Local] Instantiating {addressable} at: {transform.position} by {transform.name}");
@@ -106,6 +112,16 @@ namespace ArChi
             }
             response?.Invoke(result);
         }
+
+        public string GetFilter()
+        {
+            return category;
+        }
+
+        public void SetFilter(string category)
+        {
+            this.category = category;
+        }
     }
     public enum SpawnType
     {
@@ -117,7 +133,8 @@ namespace ArChi
         GroundRobot,
         FlyRobot,
         Weapon,
-        UI
+        UI,
+        FX
     }
     public enum SpawnMode
     {

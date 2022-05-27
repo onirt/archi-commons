@@ -10,6 +10,7 @@ namespace ArChi
     {
         [Header("Channels")]
         [SerializeField] private Vector3EventChannel destinationChannel;
+        [SerializeField] private TransformEventChannel attackChannel;
         [SerializeField] private FloatDelegateChannel worldScaleChannel;
         [SerializeField] private FloatEventChannel playerHealthChannel;
         [SerializeField] private AIBehaviourEventChannel enemyDiedChannel;
@@ -83,13 +84,13 @@ namespace ArChi
             for (int i = 0; i < size; i++)
             {
                 spawnData = enemysSpawnsData[Random.Range(0, enemysSpawnsData.Length)];
-                spawnData.Instantiate(spawnPointChannel.Get(spawnData.type), round, Spawned);
+                spawnData.InstantiateRandom(spawnPointChannel.Get(spawnData.type), round, Spawned);
             }
             for (int i = 0; i < survivorSetup.PlayerNumbers; i++)
             {
                 spawnData = playersSpawnsData[Random.Range(0, playersSpawnsData.Length)];
                 //This shuld be filled with the player status
-                spawnData.Instantiate(spawnPointChannel.Get(spawnData.type), player.level, Spawned);
+                spawnData.InstantiateRandom(spawnPointChannel.Get(spawnData.type), player.level, Spawned);
             }
         }
 
@@ -103,6 +104,11 @@ namespace ArChi
             for (int i=0; i < idestination.Length; i++)
             {
                 destinationChannel.eventChannel += idestination[i].SetDestination;
+            }
+            IAttack[] attacks = spawned.GetComponentsInChildren<IAttack>();
+            for (int i = 0; i < attacks.Length; i++)
+            {
+                attackChannel.eventChannel += attacks[i].Attack;
             }
         }
         private float GetWorldScale()

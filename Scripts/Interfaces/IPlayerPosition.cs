@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public interface IMakeDamage
+    public interface IPlayerPosition
     {
-        Attributes MakeDamage(Attributes attributes);
+        Vector3 GetPosition();
     }
 }

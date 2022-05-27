@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public class PlayerTouchSetDestinationTracker : MonoBehaviour
+    public class PlayerThirdPersonInputControl : MonoBehaviour
     {
         [Header("Channels")]
         [SerializeField] private Vector3EventChannel destinationChannel;
+        [SerializeField] private TransformEventChannel attackChannel;
         [Space(20)]
         [SerializeField] private Camera testCamera;
 
@@ -24,7 +25,14 @@ namespace ArChi
                 ray = testCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit))
                 {
-                    destinationChannel.TriggerEvent(hit.point);
+                    if (hit.collider.TryGetComponent(out ITakeDamage take))
+                    {
+                        attackChannel.TriggerEvent(hit.transform);
+                    }
+                    else
+                    {
+                        destinationChannel.TriggerEvent(hit.point);
+                    }
                 }
             }
 #else
@@ -37,9 +45,14 @@ namespace ArChi
                 ray = testCamera.ScreenPointToRay(touch.position);
                 if (Physics.Raycast(ray, out hit))
                 {
-                
-                    Debug.Log($"[Game][Touch] setting destination: {hit.point}");
-                    destinationChannel.TriggerEvent(hit.point);
+                    if (hit.collider.TryGetComponent(out ITakeDamage take))
+                    {
+                        attackChannel.TriggerEvent(hit.transform);
+                    }
+                    else
+                    {
+                        destinationChannel.TriggerEvent(hit.point);
+                    }
                 }
             }
         }

@@ -1,24 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.XR.ARFoundation;
 
 namespace ArChi
 {
-    public class StartInstantiationComponent : MonoBehaviour
+    public class StartInstantiationComponent : MonoBehaviour, IAddressableListHandle
     {
         [Header("Channels")]
         [SerializeField] private VoidEventChannel startGameChannel;
+        [SerializeField] private Vecto3DelegateChannel playerPositionChannel;
         [Space(20)]
         [Header("Data")]
         [SerializeField] private SpawnData spawnData;
         [Space(20)]
-        [SerializeField] private GameObject scenary;
+        [SerializeField] private string category;
+        [SerializeField] private string addressableGame;
         [SerializeField] private Transform arCamera;
         [SerializeField] private ARPositionOffsetTracker arPositionTracker;
         [SerializeField] private ARRaycastManager arRaycastManager;
         [SerializeField] private ARPlaneManager arPlaneManager;
-        ARSessionOrigin arSession;
+        private ARSessionOrigin arSession;
         private Ray ray;
         private RaycastHit hit;
         private List<ARRaycastHit> hits = new List<ARRaycastHit>();
@@ -26,28 +31,64 @@ namespace ArChi
 
         private bool started;
 
-        void Update()
+        private async void Start()
         {
-            if (started)
+            Debug.Log("[Start] starting load minigame");
+            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(addressableGame);
+            await handle.Task;
+            if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                return;
+                Debug.Log("[Start] minigame loaded success");
+                SetSetup(Instantiate(handle.Result));
+                GetInputEvent();
             }
+            else
+            {
+                Debug.LogError("[Start][Addressable] mingane load fail");
+            }
+            Addressables.Release(handle);
+        }
+        private async void SetSetup(GameObject minigame)
+        {
+            if (minigame.TryGetComponent(out GameManager gameManager))
+            {
+                if (gameManager.Controller.Setup.requiereCameraTraking){
+                    if (minigame.TryGetComponent(out IPlayerPositionChannel channel))
+                    {
+                        channel.SetPlayerChannel(playerPositionChannel);
+                    }
+                }
+            }
+            await Task.Yield();
+        }
+        private async void GetInputEvent()
+        {
+            Debug.Log("[Start][Input] starting input event");
 #if UNITY_EDITOR
-            if (Input.GetMouseButton(0))
+            while (!Input.GetMouseButton(0))
             {
-                ARFloorRayCasting();
+                await Task.Yield();
             }
+            ARFloorRayCasting();
 #else
 
-        if (Input.touchCount > 0)
-        {
-            touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
+            while (!started)
             {
-                ARFloorRayCasting();
+                if (Input.touchCount > 0)
+                {
+                    touch = Input.GetTouch(0);
+
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        Debug.Log("[Start][Input] touch began");
+                        ARFloorRayCasting();
+                    }
+                }
+                await Task.Yield();
             }
-        }
 #endif
+
+            Debug.Log("[Start][Input] ending input event");
         }
         private void StartGame()
         {
@@ -73,28 +114,46 @@ namespace ArChi
         }
         private void InstatiateScenary(Vector3 position)
         {
-            Debug.Log("[Game] Instantiating scenary");
+            Debug.Log("[Game][Start] Instantiating scenary");
             started = true;
-#if !UNITY_EDITOR
+            
             arPositionTracker.Origin = position;
-#endif
-            scenary.SetActive(true);
-            //Instantiate(scenary, position, scenary.transform.rotation);
+
             arPlaneManager.enabled = false;
             arRaycastManager.enabled = false;
-            Debug.Log("[Game] Destroying planes");
+            Debug.Log("[Game][Start] Destroying planes");
 
             foreach (var plane in arPlaneManager.trackables)
             {
                 Destroy(plane.gameObject);
             }
 
-            Debug.Log("[Game] Destroying manages");
+            Debug.Log("[Game][Start] Destroying manages");
             Destroy(arPlaneManager);
             Destroy(arRaycastManager);
 
             Debug.Log("[Game] invoking start game");
             Invoke(nameof(StartGame), 2);
+        }
+
+        public void AddAddressable(string addressable)
+        {
+            addressableGame = addressable;
+        }
+
+        public bool ContainsAddressable(string addressable)
+        {
+            return addressableGame.Equals(addressable);
+        }
+
+        public string GetFilter()
+        {
+            return category;
+        }
+
+        public void SetFilter(string category)
+        {
+            this.category = category;
         }
     }
 

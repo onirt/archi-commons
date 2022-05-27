@@ -11,6 +11,7 @@ namespace ArChi
         public float GameTime;
         public float Rounds;
         public int PlayerNumbers;
+        public bool requiereCameraTraking;
     }
     public enum GameType
     {

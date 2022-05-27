@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public interface IMakeDamage
+    public interface IReferences
     {
-        Attributes MakeDamage(Attributes attributes);
+        Transform GetReference(int i);
     }
 }

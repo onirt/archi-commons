@@ -28,18 +28,15 @@ namespace ArChi
             switch (state)
             {
                 case CharacterState.Attacking:
-                    Debug.Log($"[CH1][{name}] my: {state}");
                     _controller.Attack(targetAim.damage, this);
                     break;
                 case CharacterState.Searching:
-                    Debug.Log($"[CH1][{name}] my: {state}");
                     _controller.Search(this);
                     break;
                 case CharacterState.Seeking:
                     _controller.Seek(this);
                     break;
                 case CharacterState.Patrol:
-                    Debug.Log($"[CH1][{name}] my: {state}");
                     _controller.Patrol(this);
                     break;
                 default:

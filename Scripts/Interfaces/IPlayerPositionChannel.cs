@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public interface IMakeDamage
+    public interface IPlayerPositionChannel
     {
-        Attributes MakeDamage(Attributes attributes);
+        void SetPlayerChannel(Vecto3DelegateChannel channel);
     }
 }

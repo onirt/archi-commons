@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ArChi
 {
     [Serializable]
-    public class Attributes
+    public struct Attributes
     {
         public string name;
         public Category category;

@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public interface IMakeDamage
+    public interface IAttack
     {
-        Attributes MakeDamage(Attributes attributes);
+        void Attack(Transform target);
     }
 }

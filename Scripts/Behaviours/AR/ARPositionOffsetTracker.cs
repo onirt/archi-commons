@@ -21,10 +21,14 @@ namespace ArChi
                 SetOrigin();
             } 
         }
+
         private void SetOrigin()
         {
-            origin += arCamera.forward * worldScaleChannel.Get();
-            arSessionOrigin.MakeContentAppearAt(scenary, origin);
+            Debug.Log($"[Start] setting origing scale: [{worldScaleChannel.Get()}], origin: {origin}, camera position: {arCamera.position}");
+            origin -= arCamera.forward * worldScaleChannel.Get();
+            //arSessionOrigin.MakeContentAppearAt(scenary, origin);
+            arCamera.position += origin;
+            Debug.Log($"[Start] final camera position: {arCamera.position}");
         }
     }
 }

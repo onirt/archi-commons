@@ -24,13 +24,13 @@ namespace ArChi
             return weapons[i].Attributes.range;
         }
 
-        public void InstantiateWeapon(int i, Transform parent)
+        public void InstantiateWeapon(int i, Transform parent, UnityAction<GameObject> response)
         {
-            weapons[i].Instantiate(parent);
+            weapons[i].Instantiate(parent, response);
         }
         public void InstantiateUI(int level, Transform parent, UnityAction<GameObject> response)
         {
-            ui.Instantiate(parent, level, response);
+            ui.Instantiate(0, parent, SpawnMode.Parent, level, response);
         }
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace ArChi
 {
-    public interface IMakeDamage
+    public interface ICamera
     {
-        Attributes MakeDamage(Attributes attributes);
+        void SetCamera(Camera camera);
     }
 }

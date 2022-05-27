@@ -6,7 +6,7 @@ using UnityEngine.XR.ARFoundation;
 
 namespace ArChi
 {
-    public class GameManager : MonoBehaviour, IGame
+    public class GameManager : MonoBehaviour, IGame, IPlayerPositionChannel
     {
         [Header("Channels")]
         [SerializeField] private VoidEventChannel startGameChannel;
@@ -17,11 +17,14 @@ namespace ArChi
         [SerializeField] private GameController controller;
         [Space(20)]
         [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
+        [SerializeField] private GameObject scenary;
 
         private GameStatus status;
         private float playTime;
 
         public bool debug;
+
+        public GameController Controller { get => controller; }
 
         private void Start()
         {
@@ -46,6 +49,7 @@ namespace ArChi
 
         public void StartGame()
         {
+            scenary.SetActive(true);
             Debug.Log("[Game] start");
             status = GameStatus.Started;
             StartCoroutine(Playing());
@@ -77,8 +81,13 @@ namespace ArChi
                 return Vector3.zero;
             }
             int selectedPoint = UnityEngine.Random.Range(0, patrolPoints.Count);
-            Debug.Log($"[Patrol] selceted point: {selectedPoint}, position: {patrolPoints[selectedPoint].position}");
+            Debug.Log($"[Patrol] selected point: {selectedPoint}, position: {patrolPoints[selectedPoint].position}");
             return patrolPoints[selectedPoint].position;
+        }
+
+        public void SetPlayerChannel(Vecto3DelegateChannel channel)
+        {
+            Controller.PlayerPositionChannel = channel;
         }
     }
     public enum GameStatus

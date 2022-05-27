@@ -43,22 +43,24 @@ namespace ArChi.Controllers
             if (shooter.coldown > shooter.GetModel().Attributes.cooldown)
             {
                 shooter.coldown = 0;
-                shooter.transform.LookAt(shooter.TargetAim.target, Vector3.up);
+                Vector3 lookAt = shooter.TargetAim.target.position;
+                lookAt = new Vector3(lookAt.x, 1.5f, lookAt.z);
+                shooter.transform.LookAt(lookAt, Vector3.up);
+
                 Debug.Log($"[AI] attacking ");
                 
                 SetPose(1, shooter);
-                
-                IMakeDamage damage = shooter._Model.GetWeaponDamage(UnityEngine.Random.Range(0, shooter._Model.WeaponsCount));
+
+                shooter.Weapon.LookAt(lookAt, Vector3.up);
+
+                IMakeDamage damage = shooter.GetWeaponDamage();
                 if (damage != null)
                 {
-                    if (shooter.Attributes == null)
-                    {
-                        Debug.Log($"[AI][Controller]Enemy Not Have Attributes: {shooter.name}");
-                    }
-                    target.Take(damage.Get(shooter.Attributes));
+                    shooter.Shoot(damage);
                 }
                 else
                 {
+                    target.Take(shooter._Model.Attributes);
                     Debug.Log($"[{shooter.name}] What?!! I dont have any weapon!! :(");
                 }
             }
