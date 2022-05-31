@@ -22,7 +22,7 @@ namespace ArChi
             switch (state)
             {
                 case CharacterState.Attacking:
-                    _controller.Attack(targetAim.damage, this);
+                    //_controller.Attack(targetAim.damage, this);
                     break;
                 default:
                     if (isMoving)

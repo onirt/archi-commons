@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Events;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.XR.ARFoundation;
 
@@ -11,7 +12,6 @@ namespace ArChi
     public class StartInstantiationComponent : MonoBehaviour, IAddressableListHandle
     {
         [Header("Channels")]
-        [SerializeField] private VoidEventChannel startGameChannel;
         [SerializeField] private Vecto3DelegateChannel playerPositionChannel;
         [Space(20)]
         [Header("Data")]
@@ -19,7 +19,8 @@ namespace ArChi
         [Space(20)]
         [SerializeField] private string category;
         [SerializeField] private string addressableGame;
-        [SerializeField] private Transform arCamera;
+        [SerializeField] private Camera arCamera;
+        [SerializeField] private Transform arCameraTransform;
         [SerializeField] private ARPositionOffsetTracker arPositionTracker;
         [SerializeField] private ARRaycastManager arRaycastManager;
         [SerializeField] private ARPlaneManager arPlaneManager;
@@ -28,37 +29,55 @@ namespace ArChi
         private RaycastHit hit;
         private List<ARRaycastHit> hits = new List<ARRaycastHit>();
         private Touch touch;
+        private UnityEvent startGame = new UnityEvent();
 
         private bool started;
+        private AsyncOperationHandle<GameObject> handle;
 
         private async void Start()
         {
             Debug.Log("[Start] starting load minigame");
-            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(addressableGame);
+            handle = Addressables.LoadAssetAsync<GameObject>(addressableGame);
             await handle.Task;
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                Debug.Log("[Start] minigame loaded success");
-                SetSetup(Instantiate(handle.Result));
+                GameObject scenary = Instantiate(handle.Result);
+                Debug.Log($"[Start] minigame loaded success [{scenary.name}]");
+                arPositionTracker.Sceneary = scenary.transform;
+                SetSetup(scenary);
                 GetInputEvent();
             }
             else
             {
                 Debug.LogError("[Start][Addressable] mingane load fail");
             }
-            Addressables.Release(handle);
+        }
+        private void OnDestroy()
+        {
+            if (handle.IsValid())
+            {
+                Addressables.Release(handle);
+            }
+            startGame.RemoveAllListeners();
         }
         private async void SetSetup(GameObject minigame)
         {
-            if (minigame.TryGetComponent(out GameManager gameManager))
+            Debug.Log($"1.-[Start] setting minigame [{minigame.name}]");
+            if (minigame.TryGetComponent(out IGame game))
             {
-                if (gameManager.Controller.Setup.requiereCameraTraking){
-                    if (minigame.TryGetComponent(out IPlayerPositionChannel channel))
-                    {
-                        channel.SetPlayerChannel(playerPositionChannel);
-                    }
-                }
+                startGame.AddListener(game.StartGame);
             }
+            Debug.Log($"2.-[Start] setting minigame [{minigame.name}]");
+            if (minigame.TryGetComponent(out IPlayerPositionChannel channel))
+            {
+                channel.SetPlayerChannel(playerPositionChannel);
+            }
+            Debug.Log($"3.-[Start] setting minigame [{minigame.name}]");
+            if (minigame.TryGetComponent(out ICamera camera))
+            {
+                camera.SetCamera(arCamera);
+            }
+            Debug.Log($"4.-[Start] setting minigame [{minigame.name}]");
             await Task.Yield();
         }
         private async void GetInputEvent()
@@ -93,12 +112,12 @@ namespace ArChi
         private void StartGame()
         {
             Debug.Log("[Game] starting game");
-            startGameChannel.TriggerEvent();
+            startGame?.Invoke();
         }
 
         private void ARFloorRayCasting()
         {
-            Ray ray = new Ray(arCamera.position, arCamera.forward);
+            Ray ray = new Ray(arCameraTransform.position, arCameraTransform.forward);
 #if UNITY_EDITOR
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 500))
@@ -106,27 +125,29 @@ namespace ArChi
                 InstatiateScenary(hit.point);
             }
 #else
-            if (arRaycastManager.Raycast(ray, hits, UnityEngine.XR.ARSubsystems.TrackableType.PlaneWithinPolygon))
+            /*if (arRaycastManager.Raycast(ray, hits, UnityEngine.XR.ARSubsystems.TrackableType.PlaneWithinPolygon))
             {
                 InstatiateScenary(hits[0].pose.position);
-            }
+            }*/
+
+            InstatiateScenary(transform.position);
 #endif
         }
         private void InstatiateScenary(Vector3 position)
         {
             Debug.Log("[Game][Start] Instantiating scenary");
             started = true;
-            
+
             arPositionTracker.Origin = position;
 
-            arPlaneManager.enabled = false;
+            /*arPlaneManager.enabled = false;
             arRaycastManager.enabled = false;
             Debug.Log("[Game][Start] Destroying planes");
 
             foreach (var plane in arPlaneManager.trackables)
             {
                 Destroy(plane.gameObject);
-            }
+            }*/
 
             Debug.Log("[Game][Start] Destroying manages");
             Destroy(arPlaneManager);
@@ -134,6 +155,7 @@ namespace ArChi
 
             Debug.Log("[Game] invoking start game");
             Invoke(nameof(StartGame), 2);
+
         }
 
         public void AddAddressable(string addressable)

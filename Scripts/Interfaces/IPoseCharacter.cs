@@ -10,5 +10,7 @@ namespace ArChi
         void SetChest(SimpleTransform transform);
         void SetRightHand(SimpleTransform transform);
         void SetLeftHand(SimpleTransform transform);
+        void SetWeapon(SimpleTransform transform);
+
     }
 }

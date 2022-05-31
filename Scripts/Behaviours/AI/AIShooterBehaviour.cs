@@ -34,6 +34,7 @@ namespace ArChi
         public float coldown;
 
         public UnityEvent<IMakeDamage> shootEvent;
+        public IUICharacter ui;
 
         public struct Aim
         {
@@ -60,7 +61,7 @@ namespace ArChi
             base.Init();
             _model = (CharacterModel)GetModel();
             weaponSelected = UnityEngine.Random.Range(0, _model.WeaponsCount);
-            _model.InstantiateUI(1, uiSpot, controller.Connector.TriggerEvent);
+            _model.InstantiateUI(1, uiSpot, SetUI);
             _model.InstantiateWeapon(weaponSelected, weaponSpot, SetReferences);
             detector.radius = _model.GetWeaponRange(weaponSelected);
             GetController().SetPose(0, this);
@@ -88,10 +89,10 @@ namespace ArChi
                     state = CharacterState.Attacking;
                 }
             }
-            if (other.TryGetComponent(out IMakeDamage damage))
+            /*if (other.TryGetComponent(out IMakeDamage damage))
             {
                 Take(damage.MakeDamage(attributes));
-            }
+            }*/
         }
 
         private void OnTriggerExit(Collider other)
@@ -138,8 +139,11 @@ namespace ArChi
         }
         private void SetReference(Transform reference, Transform obj)
         {
-            obj.SetParent(reference);
-            obj.rotation = reference.rotation;
+            //obj.SetParent(reference);
+            //obj.position = reference.position;
+            //obj.rotation = reference.rotation;
+            obj.localPosition = Vector3.zero;
+            obj.localRotation = Quaternion.identity;
         }
         private void SeekExhaustion()
         {
@@ -164,12 +168,29 @@ namespace ArChi
         }
         public void Take(Attributes attributes)
         {
+            Debug.Log($"[Shoot][Damage] taking damage: {attributes.attack} [{name}]");
             GetController().Take(attributes, this);
         }
 
         public AIShooterController GetController()
         {
             return controller;
+        }
+        private void SetUI(GameObject uiGameObject)
+        {
+            Debug.Log($"[Attributes][SetUI][{name}] Attributes: {attributes.health}");
+            if (uiGameObject.TryGetComponent(out IUICharacter character))
+            {
+                character.SetMaxHealth(attributes.health);
+                ui = character;
+            }
+            controller.Connector.TriggerEvent(uiGameObject);
+        }
+        public override void SetWeapon(SimpleTransform transform)
+        {
+            if (!weaponSpot) return;
+            weaponSpot.localPosition = transform.position;
+            weaponSpot.localRotation = Quaternion.Euler(transform.rotation);
         }
     }
 }

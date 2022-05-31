@@ -74,7 +74,7 @@ namespace ArChi
 
         public override void StartGame()
         {
-            Debug.Log($"[Game] controller start... round [{round}]");
+            Debug.Log($"[Game][Start] controller start... round [{round}]");
 
             SpawnData spawnData;
             

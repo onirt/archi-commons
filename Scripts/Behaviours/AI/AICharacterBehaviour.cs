@@ -63,6 +63,11 @@ namespace ArChi
             leftControlReference.localPosition = transform.position;
             leftControlReference.localRotation = Quaternion.Euler(transform.rotation);
         }
+
+        public virtual void SetWeapon(SimpleTransform transform)
+        {
+            
+        }
     }
 
 }

@@ -6,7 +6,9 @@ using UnityEngine.XR.ARFoundation;
 
 namespace ArChi
 {
-    public class GameManager : MonoBehaviour, IGame, IPlayerPositionChannel
+    public class GameManager : MonoBehaviour, 
+        IGame, 
+        IPlayerPositionChannel
     {
         [Header("Channels")]
         [SerializeField] private VoidEventChannel startGameChannel;
@@ -35,22 +37,21 @@ namespace ArChi
         private void OnEnable()
         {
             controller.RegisterEvent();
-            startGameChannel.eventChannel += StartGame;
             endGameChannel.eventChannel += EndGame;
             patrolPointChannel.listener += GetPatrolPoint;
         }
         private void OnDisable()
         {
             controller.UnregisterEvent();
-            startGameChannel.eventChannel -= StartGame;
             endGameChannel.eventChannel -= EndGame;
             patrolPointChannel.listener -= GetPatrolPoint;
         }
 
         public void StartGame()
         {
+            startGameChannel.TriggerEvent();
             scenary.SetActive(true);
-            Debug.Log("[Game] start");
+            Debug.Log($"[Game][Start] start: {scenary.activeSelf}");
             status = GameStatus.Started;
             StartCoroutine(Playing());
         }

@@ -69,6 +69,7 @@ namespace ArChi
         Head,
         Chest,
         Lefthand,
-        RightHand
+        RightHand,
+        Weapon
     }
 }

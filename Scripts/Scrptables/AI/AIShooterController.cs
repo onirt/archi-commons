@@ -22,11 +22,17 @@ namespace ArChi.Controllers
                 if (hitProbability < 10)
                 {
                     damage *= 2;
-                    Debug.Log($"[{shooter.name}] Sweet! is Critical");
+                    Debug.Log($"[Shoot][{shooter.name}] Sweet! is Critical");
                 }
-                attributes.health -= damage;
-                if (attributes.health <= 0)
+                Attributes shooterAttributes = shooter.Attributes;
+                Debug.Log($"1.[Shoot][Damage][{shooter.name}] health: {shooterAttributes.health}, damage: {damage}");
+                shooterAttributes.health -= damage;
+                shooter.Attributes = shooterAttributes;
+                shooter.ui.UpdatedHealth(shooterAttributes.health);
+                Debug.Log($"2.[Shoot][Damage][{shooter.name}] health: {shooterAttributes.health}, damage: {damage}");
+                if (shooterAttributes.health <= 0)
                 {
+                    Debug.Log($"[{shooter.name}] Ohhh i Died ughhh!");
                     shooter.DiedChannel.TriggerEvent(shooter);
                     shooter.Animator.SetTrigger("Die");
                     Destroy(shooter.gameObject, 5);
@@ -34,7 +40,7 @@ namespace ArChi.Controllers
             }
             else
             {
-                Debug.Log($"[{shooter.name}] What?! I fail!");
+                Debug.Log($"[Shoot][Damage][{shooter.name}] What?! I fail! [{hitProbability}]");
             }
         }
 
@@ -44,9 +50,9 @@ namespace ArChi.Controllers
             {
                 shooter.coldown = 0;
                 Vector3 lookAt = shooter.TargetAim.target.position;
-                lookAt = new Vector3(lookAt.x, 1.5f, lookAt.z);
                 shooter.transform.LookAt(lookAt, Vector3.up);
-
+                lookAt = new Vector3(lookAt.x, shooter.Weapon.position.y, lookAt.z);
+                shooter.Weapon.LookAt(lookAt);
                 Debug.Log($"[AI] attacking ");
                 
                 SetPose(1, shooter);

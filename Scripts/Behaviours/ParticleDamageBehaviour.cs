@@ -18,7 +18,7 @@ namespace ArChi
 
         private void OnParticleCollision(GameObject other)
         {
-            Debug.Log($"[Shoot] Particle collision detected {other.name}");
+            Debug.Log($"[Shoot] Particle collision detected {other.name} making damage");
             if (damage != null)
             {
                 ITakeDamage take = other.GetComponentInChildren<ITakeDamage>();
@@ -27,10 +27,20 @@ namespace ArChi
                     int events = bullets.GetCollisionEvents(other, collisionEvents);
                     for (int i = 0; i < events; i++)
                     {
+                        Debug.Log($"[Shoot] Particle collision detected {other.name} making damage");
                         //Instantiate(sparks, collisionEvents[i].intersection, Quaternion.LookRotation(collisionEvents[i].normal));
                         take.Take(damage.MakeDamage(default));
                     }
                 }
+                else
+                {
+                    Debug.Log($"[Shoot] no Taker datected");
+                }
+            }
+            else
+            {
+
+                Debug.Log($"[Shoot] No damage detected");
             }
         }
         public void Shoot(IMakeDamage damage)

@@ -31,6 +31,9 @@ namespace ArChi
                 case PoseReference.Lefthand:
                     icharacter.SetLeftHand(pose.transform);
                     break;
+                case PoseReference.Weapon:
+                    icharacter.SetWeapon(pose.transform);
+                    break;
             }
         }
     }

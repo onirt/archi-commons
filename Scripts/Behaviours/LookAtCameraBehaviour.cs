@@ -13,6 +13,7 @@ namespace ArChi
             if (playerChannel)
             {
                 transform.LookAt(playerChannel.Get());
+                transform.Rotate(0,180,0);
             }
         }
         public void SetPlayerChannel(Vecto3DelegateChannel channel)

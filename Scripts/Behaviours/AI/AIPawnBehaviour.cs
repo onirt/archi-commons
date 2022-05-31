@@ -7,9 +7,9 @@ namespace ArChi
     public class AIPawnBehaviour : AIBehaviour, IModel<PawnModel>
     {
         [SerializeField] protected PawnModel model;
-        protected Attributes attributes;
+        [SerializeField] protected Attributes attributes;
 
-        public Attributes Attributes { get => attributes; }
+        public Attributes Attributes { get => attributes; set => attributes = value; }
 
         public virtual PawnModel GetModel()
         {
@@ -20,6 +20,7 @@ namespace ArChi
         {
             base.Init();
             attributes = new Attributes(GetModel().Attributes);
+            Debug.Log($"[Attributes][Init][{name}] Attributes: {attributes.health}");
         }
     }
 }

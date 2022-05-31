@@ -15,6 +15,7 @@ namespace ArChi
         [SerializeField] private Transform scenary;
         [SerializeField] private Vector3 origin;
 
+        public Transform Sceneary { set => scenary = value; }
         public Vector3 Origin { 
             set { 
                 origin = value;
@@ -25,10 +26,13 @@ namespace ArChi
         private void SetOrigin()
         {
             Debug.Log($"[Start] setting origing scale: [{worldScaleChannel.Get()}], origin: {origin}, camera position: {arCamera.position}");
-            origin -= arCamera.forward * worldScaleChannel.Get();
-            //arSessionOrigin.MakeContentAppearAt(scenary, origin);
-            arCamera.position += origin;
-            Debug.Log($"[Start] final camera position: {arCamera.position}");
+            scenary.position = origin;
+            origin -= Vector3.up * worldScaleChannel.Get();
+            Debug.Log($"[Start] final origin: {origin}, camera position: {arCamera.position}, {arCamera.localPosition}");
+            arSessionOrigin.MakeContentAppearAt(scenary, origin);
+            
+            //arCamera.position += origin;
+            Debug.Log($"[Start] final camera position: {arCamera.position}, {arCamera.localPosition}");
         }
     }
 }
